@@ -52,6 +52,7 @@ export interface InwardEntryItem {
   length_feet: number
   pieces: number
   cft: number
+  thickness: number
 }
 
 export interface OutwardEntry {
@@ -80,7 +81,16 @@ export interface OutwardEntryItem {
   length_feet: number
   pieces: number
   cft: number
+  thickness: number
 }
+
+export interface ThicknessSection {
+  id: string
+  thickness: string
+  tableData: import('./index').CFTTableData
+}
+
+export type CFTTableData = Record<number, Record<number, number>>
 
 // CFT Table cell state: [width_inch][length_feet] = pieces
 export type CFTTableData = Record<string, Record<number, number>>

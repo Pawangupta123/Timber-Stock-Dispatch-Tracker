@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Eye, Printer } from 'lucide-react'
 import { format } from 'date-fns'
+import DeleteEntryButton from '@/components/DeleteEntryButton'
 
 export default async function OutwardListPage() {
   const supabase = await createServerSupabaseClient()
@@ -63,6 +64,7 @@ export default async function OutwardListPage() {
                     <Link href={`/challan/${entry.id}`}>
                       <Button size="sm" variant="ghost"><Printer className="w-4 h-4" /></Button>
                     </Link>
+                    <DeleteEntryButton id={entry.id} table="outward_entries" />
                   </div>
                 </td>
               </tr>

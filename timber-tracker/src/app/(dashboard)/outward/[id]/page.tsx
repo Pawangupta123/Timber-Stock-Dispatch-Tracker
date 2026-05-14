@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, Printer } from 'lucide-react'
 import { format } from 'date-fns'
 import CFTTableReadOnly from '@/components/cft/CFTTableReadOnly'
+import DeleteEntryButton from '@/components/DeleteEntryButton'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -51,12 +52,15 @@ export default async function OutwardDetailPage({ params }: Props) {
           </h1>
           <p className="text-sm text-gray-500">{format(new Date(entry.date), 'dd MMMM yyyy')}</p>
         </div>
-        <Link href={`/challan/${entry.id}`}>
-          <Button className="bg-gray-800 hover:bg-gray-900">
-            <Printer className="w-4 h-4 mr-2" />
-            Print Challan
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href={`/challan/${entry.id}`}>
+            <Button className="bg-gray-800 hover:bg-gray-900">
+              <Printer className="w-4 h-4 mr-2" />
+              Print Challan
+            </Button>
+          </Link>
+          <DeleteEntryButton id={entry.id} table="outward_entries" redirectTo="/outward" variant="button" label="Delete Entry" />
+        </div>
       </div>
 
       <Card className="mb-6">

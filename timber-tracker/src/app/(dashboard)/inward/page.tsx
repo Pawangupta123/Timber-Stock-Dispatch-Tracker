@@ -4,18 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Eye } from 'lucide-react'
 import { format } from 'date-fns'
+import DeleteEntryButton from '@/components/DeleteEntryButton'
 
 export default async function InwardListPage() {
   const supabase = await createServerSupabaseClient()
 
   const { data: entries } = await supabase
     .from('inward_entries')
-    .select(`
-      *,
-      supplier:parties(name),
-      category:categories(name),
-      wood_type:wood_types(name)
-    `)
+    .select(`*, supplier:parties(name), category:categories(name), wood_type:wood_types(name)`)
     .order('created_at', { ascending: false })
     .limit(100)
 
@@ -44,9 +40,8 @@ export default async function InwardListPage() {
               <th className="px-4 py-3 text-left font-semibold text-gray-600">Vehicle</th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">Category</th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">Wood</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">Thickness</th>
               <th className="px-4 py-3 text-right font-semibold text-gray-600">Total CFT</th>
-              <th className="px-4 py-3 text-center font-semibold text-gray-600">Action</th>
+              <th className="px-4 py-3 text-center font-semibold text-gray-600">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -55,30 +50,22 @@ export default async function InwardListPage() {
                 <td className="px-4 py-3 text-gray-500">{i + 1}</td>
                 <td className="px-4 py-3">{format(new Date(entry.date), 'dd/MM/yyyy')}</td>
                 <td className="px-4 py-3 font-medium">{(entry.supplier as any)?.name}</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline">{entry.vehicle_number}</Badge>
-                </td>
+                <td className="px-4 py-3"><Badge variant="outline">{entry.vehicle_number}</Badge></td>
                 <td className="px-4 py-3">{(entry.category as any)?.name}</td>
                 <td className="px-4 py-3">{(entry.wood_type as any)?.name}</td>
-                <td className="px-4 py-3">{entry.thickness}"</td>
-                <td className="px-4 py-3 text-right font-semibold text-green-700">
-                  {entry.total_cft} CFT
-                </td>
+                <td className="px-4 py-3 text-right font-semibold text-green-700">{entry.total_cft} CFT</td>
                 <td className="px-4 py-3 text-center">
-                  <Link href={`/inward/${entry.id}`}>
-                    <Button size="sm" variant="ghost">
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                  </Link>
+                  <div className="flex justify-center gap-1">
+                    <Link href={`/inward/${entry.id}`}>
+                      <Button size="sm" variant="ghost"><Eye className="w-4 h-4" /></Button>
+                    </Link>
+                    <DeleteEntryButton id={entry.id} table="inward_entries" />
+                  </div>
                 </td>
               </tr>
             ))}
             {(!entries || entries.length === 0) && (
-              <tr>
-                <td colSpan={9} className="px-4 py-16 text-center text-gray-400">
-                  No inward entries yet
-                </td>
-              </tr>
+              <tr><td colSpan={8} className="px-4 py-16 text-center text-gray-400">No inward entries yet</td></tr>
             )}
           </tbody>
         </table>
